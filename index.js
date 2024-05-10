@@ -7,7 +7,7 @@ import leaveRouter from "./Routers/leave.router.js";
 import holidayRouter from "./Routers/holiday.router.js";
 const app = express();
 app.use(cors({
-  origin: 'http://localhost:5173', 
+  origin: 'https://genuine-basbousa-94a381.netlify.app', 
   methods: ['GET', 'POST'], 
   allowedHeaders: ['Content-Type', 'Authorization'], 
   credentials: true 
