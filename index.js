@@ -6,7 +6,12 @@ import { connectDB } from "./Database/config.js";
 import leaveRouter from "./Routers/leave.router.js";
 import holidayRouter from "./Routers/holiday.router.js";
 const app = express();
-app.use(cors())
+app.use(cors({
+  origin: 'https://genuine-basbousa-94a381.netlify.app', 
+  methods: ['GET', 'POST'], 
+  allowedHeaders: ['Content-Type', 'Authorization'], 
+  credentials: true 
+}));
 app.use(express.json())
 configDotenv()
 connectDB();
