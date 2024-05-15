@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 const leaveSchema = mongoose.Schema({
     userId:
     {
-        type: Number,
+        type: String,
         required: true
     },
     date:
