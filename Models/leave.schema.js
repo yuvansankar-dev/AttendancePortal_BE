@@ -11,6 +11,11 @@ const leaveSchema = mongoose.Schema({
         type: Number,
         required: true
     },
+    month:
+    {
+        type: String,
+        required: true
+    },
     reason:
     {
         type: String,

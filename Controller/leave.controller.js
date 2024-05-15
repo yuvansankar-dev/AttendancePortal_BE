@@ -7,9 +7,14 @@ export const applyLeave = (req, res) => {
         const jwtValue = req.headers.authorization.slice(7)
         jwt.verify(jwtValue, process.env.SECRET_KEY)
         const leaveData = req.body.selectedDates.map((epochValue) => {
+            const monthName = [
+                'January', 'February', 'March', 'April', 'May', 'June',
+                'July', 'August', 'September', 'October', 'November', 'December'
+            ][new Date(epochValue).getMonth()]
             return {
                 userId: req.body.userId,
                 date: epochValue,
+                month: monthName,
                 reason: req.body.reason,
             }
         })
@@ -52,5 +57,36 @@ export const getLeaveCount = async (req, res) => {
     else {
         res.status(400).json({ errMsg: "Error accured" })
 
+    }
+}
+export const getMonthlyLeaveCount = async (req, res) => {
+    try {
+        const jwtValue = req.headers.authorization.slice(7)
+        const userDetail = jwt.verify(jwtValue, process.env.SECRET_KEY)
+        leaveModel.aggregate([
+            {$match:{date: { $lte: new Date().getTime() }}},
+            {
+                $group: { _id: "$month", totalLeaveCount: { $sum: 1 } }
+            }
+        ]).then((result) => {
+            console.log(result)
+            const monthNames = [
+                'January', 'February', 'March', 'April', 'May', 'June',
+                'July', 'August', 'September', 'October', 'November', 'December'
+            ];
+            let leaveList = {}
+            result.forEach((leave) => leaveList[leave._id] = leave.totalLeaveCount)
+            leaveList = monthNames.map((month) => {
+                return leaveList[month] ?? 0
+            })
+            res.status(200).json({ msg: "Leave List fetched successfully", leaveList })
+        }).catch((result) => {
+            res.status(403).json({ errMsg: "Error occured", result })
+
+        })
+
+    }
+    catch {
+        res.status(403).json({ errMsg: "Error occured" })
     }
 }
